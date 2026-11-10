@@ -434,9 +434,13 @@ function weatherAnswer(current, question) {
   const temp = Number(current.temperature_2m);
   const rain = Number(current.precipitation);
   const condition = weatherDescription(current.weather_code);
-  const observation = current.time
-    ? new Date(current.time).toLocaleString("en-IE", { timeZone: "Europe/Dublin" })
-    : "time not supplied by weather service";
+const observation = current.time
+  ? (() => {
+      const [date, time] = current.time.split("T");
+      const [year, month, day] = date.split("-");
+      return `${day}/${month}/${year}, ${time}`;
+    })()
+  : "time not supplied by weather service";
 
   const lines = [
     `Live Grand Canal Dock conditions: ${condition}.`,
