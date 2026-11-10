@@ -235,9 +235,19 @@ Looking for a paddle, a swim or a little sauna time? Ask me about today's activi
 <footer><strong>DOCKSIDE PADDLE CO.</strong> · Grand Canal Dock, Dublin · Make a splash, find your flow. <span style="display:block;margin-top:8px;font-size:9px;opacity:.7">Dublin waterfront and watersports photography: Visit Dublin and Surfdock Watersports.</span></footer>
 
 <script>
-"use strict";
+ "use strict";
+
 const SESSIONS_URL = "https://bdaib-hub.pages.dev/data/dockside/sessions.csv";
 const BRAIN_URL = "https://luas-class.kluxy.app/chat";
+
+/* Grand Canal Dock, Dublin — Open-Meteo live conditions */
+const WEATHER_URL =
+  "https://api.open-meteo.com/v1/forecast?latitude=53.344&longitude=-6.237" +
+  "&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m" +
+  "&wind_speed_unit=kmh&timezone=Europe%2FDublin";
+
+const PADDLEBOARD_WIND_LIMIT_KMH = 20;
+
 const SYSTEM = `You are Ask Dockside, the customer service assistant for Dockside Paddle Co.
 Use only the CSV data included in the latest user message.
 Never invent activity names, prices, discounts, times, capacity or availability.
@@ -246,7 +256,8 @@ Use slots_left only for remaining availability. If it says "auto", availability 
 Do not infer remaining places from capacity. Only say sold out when slots_left is exactly 0.
 Mention a discount only if it is explicitly present in the CSV notes.
 If a value is missing or unclear, say that it is not specified.
-Be concise, friendly, and do not claim a booking was made.`;
+Be concise, friendly, and do not claim a booking was made.
+Do not invent current weather. Weather questions are handled using a separate live weather source.`;
 
 const chat = document.getElementById("chat");
 const form = document.getElementById("chatForm");
@@ -267,100 +278,263 @@ function addMessage(text, type, meta) {
   chat.scrollTop = chat.scrollHeight;
   return bubble;
 }
+
 function parseCSV(text) {
-  const rows = []; let row = [], field = "", quoted = false;
-  for (let i=0;i<text.length;i++) {
-    const c=text[i], next=text[i+1];
-    if(c==='"'&&quoted&&next==='"'){field+='"';i++;}
-    else if(c==='"') quoted=!quoted;
-    else if(c===","&&!quoted){row.push(field);field="";}
-    else if((c==="\n"||c==="\r")&&!quoted){if(c==="\r"&&next==="\n")i++;row.push(field);field="";if(row.some(v=>v.trim()!==""))rows.push(row);row=[];}
-    else field+=c;
+  const rows = [];
+  let row = [], field = "", quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i], next = text[i + 1];
+    if (c === '"' && quoted && next === '"') { field += '"'; i++; }
+    else if (c === '"') quoted = !quoted;
+    else if (c === "," && !quoted) { row.push(field); field = ""; }
+    else if ((c === "\n" || c === "\r") && !quoted) {
+      if (c === "\r" && next === "\n") i++;
+      row.push(field); field = "";
+      if (row.some(v => v.trim() !== "")) rows.push(row);
+      row = [];
+    } else field += c;
   }
-  row.push(field);if(row.some(v=>v.trim()!==""))rows.push(row);
-  if(rows.length<2)throw new Error("The sessions CSV is empty or could not be read.");
-  const headers=rows[0].map(h=>h.trim().replace(/^\uFEFF/,"").toLowerCase());
-  return rows.slice(1).map(values=>{const item={};headers.forEach((h,i)=>item[h]=(values[i]??"").trim());return item;});
+  row.push(field);
+  if (row.some(v => v.trim() !== "")) rows.push(row);
+  if (rows.length < 2) throw new Error("The sessions CSV is empty or could not be read.");
+  const headers = rows[0].map(h => h.trim().replace(/^\uFEFF/, "").toLowerCase());
+  return rows.slice(1).map(values => {
+    const item = {};
+    headers.forEach((h, i) => item[h] = (values[i] ?? "").trim());
+    return item;
+  });
 }
-function valueOf(row,names){for(const name of names){const key=Object.keys(row).find(k=>k.toLowerCase()===name);if(key&&row[key]!=="")return row[key];}return "";}
-function activityName(row){return valueOf(row,["session","activity","session_name","name","activity_name"]);}
-function priceValue(row){return valueOf(row,["price_eur","price","cost_eur","cost"]);}
-function slotsValue(row){return valueOf(row,["slots_left","available_slots","remaining_slots","slots_remaining"]);}
-function euro(value){const n=Number(String(value).replace(/[€,\s]/g,""));return Number.isFinite(n)?"€"+n.toFixed(2).replace(/\.00$/,""):"€"+value;}
-function findActivity(rows,question){
-  const q=question.toLowerCase();
-  return rows.find(r=>{const name=activityName(r);return name&&(q.includes(name.toLowerCase())||name.toLowerCase().includes(q));});
+
+function valueOf(row, names) {
+  for (const name of names) {
+    const key = Object.keys(row).find(k => k.toLowerCase() === name);
+    if (key && row[key] !== "") return row[key];
+  }
+  return "";
 }
-function availabilityText(row){
-  const s=slotsValue(row),name=activityName(row);
-  if(s.toLowerCase()==="auto"||s==="")return `Availability for ${name} is not specified in today's data.`;
-  const n=Number(s);
-  if(Number.isFinite(n))return n===0?`${name} is sold out (0 places remaining).`:`${name} has ${n} places remaining.`;
+function activityName(row) {
+  return valueOf(row, ["session", "activity", "session_name", "name", "activity_name"]);
+}
+function priceValue(row) {
+  return valueOf(row, ["price_eur", "price", "cost_eur", "cost"]);
+}
+function slotsValue(row) {
+  return valueOf(row, ["slots_left", "available_slots", "remaining_slots", "slots_remaining"]);
+}
+function euro(value) {
+  const n = Number(String(value).replace(/[€,\s]/g, ""));
+  return Number.isFinite(n) ? "€" + n.toFixed(2).replace(/\.00$/, "") : "€" + value;
+}
+function findActivity(rows, question) {
+  const q = question.toLowerCase();
+  return rows.find(r => {
+    const name = activityName(r);
+    return name && (q.includes(name.toLowerCase()) || name.toLowerCase().includes(q));
+  });
+}
+function availabilityText(row) {
+  const s = slotsValue(row), name = activityName(row);
+  if (s.toLowerCase() === "auto" || s === "") return `Availability for ${name} is not specified in today's data.`;
+  const n = Number(s);
+  if (Number.isFinite(n)) {
+    if (n === 0) return `${name} is sold out (0 places remaining).`;
+    return `${name} has ${n} ${n === 1 ? "place" : "places"} remaining.`;
+  }
   return `Availability for ${name} is not specified in today's data.`;
 }
-function localAnswer(rows,question){
-  const q=question.toLowerCase();
-  const named=findActivity(rows,question);
-  const asksPrice=/\b(price|cost|how much|€|euro|free)\b/.test(q);
-  const asksAvailability=/\b(available|availability|slots|places|sold out|capacity|remaining)\b/.test(q);
-  const asksList=/\b(activities|sessions|what can|what are|list|today)\b/.test(q);
 
-  // Handle combined questions first so neither requested field is dropped.
-  if(named&&asksPrice&&asksAvailability){
-    const p=priceValue(named);
-    const priceLine=p?`${activityName(named)} costs ${euro(p)} today.`:`The price for ${activityName(named)} is not specified in today's data.`;
+function localAnswer(rows, question) {
+  const q = question.toLowerCase();
+  const named = findActivity(rows, question);
+  const asksPrice = /\b(price|cost|how much|€|euro|free)\b/.test(q);
+  const asksAvailability = /\b(available|availability|slots|places|sold out|capacity|remaining)\b/.test(q);
+  const asksList = /\b(activities|sessions|what can|what are|list|today)\b/.test(q);
+
+  if (named && asksPrice && asksAvailability) {
+    const p = priceValue(named);
+    const priceLine = p
+      ? `${activityName(named)} costs ${euro(p)} today.`
+      : `The price for ${activityName(named)} is not specified in today's data.`;
     return `${priceLine}\n${availabilityText(named)}`;
   }
-  if(named&&asksPrice){
-    const p=priceValue(named);
-    return p?`${activityName(named)} costs ${euro(p)} today, according to the live session data.`:`${activityName(named)}: the price is not specified in today's session data.`;
+  if (named && asksPrice) {
+    const p = priceValue(named);
+    return p
+      ? `${activityName(named)} costs ${euro(p)} today, according to the live session data.`
+      : `${activityName(named)}: the price is not specified in today's session data.`;
   }
-  if(named&&asksAvailability)return availabilityText(named);
+  if (named && asksAvailability) return availabilityText(named);
 
-  if(asksList&&asksPrice){
-    return rows.map(r=>{const n=activityName(r),p=priceValue(r);return n?`${n}: ${p?euro(p):"price not specified"}`:"";}).filter(Boolean).join("\n");
+  if (asksList && asksPrice) {
+    return rows.map(r => {
+      const n = activityName(r), p = priceValue(r);
+      return n ? `${n}: ${p ? euro(p) : "price not specified"}` : "";
+    }).filter(Boolean).join("\n");
   }
-  if(asksAvailability){
-    const numeric=rows.filter(r=>slotsValue(r)!==""&&slotsValue(r).toLowerCase()!=="auto"&&Number.isFinite(Number(slotsValue(r))));
-    const sold=numeric.filter(r=>Number(slotsValue(r))===0);
-    const unknown=rows.filter(r=>slotsValue(r).toLowerCase()==="auto"||slotsValue(r)==="");
-    const parts=[];
-    if(numeric.length)parts.push("Availability explicitly recorded in the data:\n"+numeric.map(r=>`${activityName(r)}: ${slotsValue(r)} places left`).join("\n"));
-    if(sold.length)parts.push("Sold out:\n"+sold.map(r=>activityName(r)).join("\n"));
-    if(unknown.length)parts.push("Remaining availability is not specified (marked auto or blank) for:\n"+unknown.map(r=>activityName(r)).join("\n"));
-    return parts.join("\n\n")||"The session data does not specify remaining availability.";
+  if (asksAvailability) {
+    const numeric = rows.filter(r =>
+      slotsValue(r) !== "" &&
+      slotsValue(r).toLowerCase() !== "auto" &&
+      Number.isFinite(Number(slotsValue(r)))
+    );
+    const sold = numeric.filter(r => Number(slotsValue(r)) === 0);
+    const unknown = rows.filter(r => slotsValue(r).toLowerCase() === "auto" || slotsValue(r) === "");
+    const parts = [];
+    if (numeric.length) {
+      parts.push("Availability explicitly recorded in the data:\n" +
+        numeric.map(r => {
+          const n = Number(slotsValue(r));
+          return `${activityName(r)}: ${n} ${n === 1 ? "place" : "places"} left`;
+        }).join("\n"));
+    }
+    if (sold.length) parts.push("Sold out:\n" + sold.map(r => activityName(r)).join("\n"));
+    if (unknown.length) {
+      parts.push("Remaining availability is not specified (marked auto or blank) for:\n" +
+        unknown.map(r => activityName(r)).join("\n"));
+    }
+    return parts.join("\n\n") || "The session data does not specify remaining availability.";
   }
   return null;
 }
-function extractReply(data){
-  if(typeof data==="string")return data;if(!data||typeof data!=="object")return "";
-  for(const key of ["reply","response","answer","message","content","output"])if(typeof data[key]==="string")return data[key];
-  if(data.choices?.[0]?.message?.content)return data.choices[0].message.content;
-  if(data.result&&typeof data.result==="string")return data.result;return "";
+
+function isWeatherQuestion(question) {
+  return /\b(weather|wind|windy|safe|safety|conditions|forecast|rain|temperature)\b/i.test(question);
 }
-async function askBrain(question,csv){
-  const response=await fetch(BRAIN_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({system:SYSTEM,messages:[{role:"user",content:"LIVE SESSION CSV:\n"+csv+"\n\nCustomer question: "+question}]})});
-  if(!response.ok)throw new Error("AI service returned HTTP "+response.status+".");
-  const data=await response.json(),reply=extractReply(data);
-  if(!reply)throw new Error("The AI service returned an unexpected response format.");
+
+function weatherDescription(code) {
+  const descriptions = {
+    0: "clear sky", 1: "mainly clear", 2: "partly cloudy", 3: "overcast",
+    45: "fog", 48: "depositing rime fog",
+    51: "light drizzle", 53: "moderate drizzle", 55: "dense drizzle",
+    56: "light freezing drizzle", 57: "dense freezing drizzle",
+    61: "slight rain", 63: "moderate rain", 65: "heavy rain",
+    66: "light freezing rain", 67: "heavy freezing rain",
+    71: "slight snow", 73: "moderate snow", 75: "heavy snow", 77: "snow grains",
+    80: "slight rain showers", 81: "moderate rain showers", 82: "violent rain showers",
+    85: "slight snow showers", 86: "heavy snow showers",
+    95: "thunderstorm", 96: "thunderstorm with slight hail", 99: "thunderstorm with heavy hail"
+  };
+  return descriptions[Number(code)] || "conditions not classified";
+}
+
+async function getLiveWeather() {
+  const response = await fetch(WEATHER_URL, { cache: "no-store" });
+  if (!response.ok) throw new Error("Open-Meteo returned HTTP " + response.status + ".");
+  const data = await response.json();
+  const current = data && data.current;
+  if (!current || !Number.isFinite(Number(current.wind_speed_10m))) {
+    throw new Error("The live weather response did not include a valid wind-speed reading.");
+  }
+  return current;
+}
+
+function weatherAnswer(current, question) {
+  const wind = Number(current.wind_speed_10m);
+  const gust = Number(current.wind_gusts_10m);
+  const temp = Number(current.temperature_2m);
+  const rain = Number(current.precipitation);
+  const condition = weatherDescription(current.weather_code);
+  const observation = current.time
+    ? new Date(current.time).toLocaleString("en-IE", { timeZone: "Europe/Dublin" })
+    : "time not supplied by weather service";
+
+  const lines = [
+    `Live Grand Canal Dock conditions: ${condition}.`,
+    `Wind: ${wind.toFixed(1)} km/h` +
+      (Number.isFinite(gust) ? `; gusts: ${gust.toFixed(1)} km/h.` : ".")
+  ];
+  if (Number.isFinite(temp)) lines.push(`Temperature: ${temp.toFixed(1)}°C.`);
+  if (Number.isFinite(rain)) lines.push(`Precipitation: ${rain.toFixed(1)} mm.`);
+  lines.push(`Weather observation: ${observation} (Europe/Dublin).`);
+
+  const asksPaddleSafety = /\b(paddle|paddleboard|paddleboarding|sup)\b/i.test(question);
+  if (asksPaddleSafety) {
+    lines.push(`Published paddleboard wind limit in the session information: ${PADDLEBOARD_WIND_LIMIT_KMH} km/h.`);
+    if (wind > PADDLEBOARD_WIND_LIMIT_KMH) {
+      lines.push("Wind is above that limit. Paddleboarding should not proceed under this wind-limit rule.");
+    } else if (Number.isFinite(gust) && gust > PADDLEBOARD_WIND_LIMIT_KMH) {
+      lines.push("Sustained wind is within the stated limit, but gusts exceed it. Conditions may be unsuitable; check with Dockside staff before entering the water.");
+    } else {
+      lines.push("The measured sustained wind is within the stated wind limit. This alone does not guarantee safe water conditions; confirm with Dockside staff before your session.");
+    }
+  }
+  lines.push("This is a weather-data comparison, not an official safety clearance. Follow Dockside staff instructions.");
+  return lines.join("\n");
+}
+
+function extractReply(data) {
+  if (typeof data === "string") return data;
+  if (!data || typeof data !== "object") return "";
+  for (const key of ["reply", "response", "answer", "message", "content", "output"]) {
+    if (typeof data[key] === "string") return data[key];
+  }
+  if (data.choices?.[0]?.message?.content) return data.choices[0].message.content;
+  if (data.result && typeof data.result === "string") return data.result;
+  return "";
+}
+
+async function askBrain(question, csv) {
+  const response = await fetch(BRAIN_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      system: SYSTEM,
+      messages: [{ role: "user", content: "LIVE SESSION CSV:\n" + csv + "\n\nCustomer question: " + question }]
+    })
+  });
+  if (!response.ok) throw new Error("AI service returned HTTP " + response.status + ".");
+  const data = await response.json(), reply = extractReply(data);
+  if (!reply) throw new Error("The AI service returned an unexpected response format.");
   return reply;
 }
-async function submitQuestion(question){
-  if(!question.trim())return;
-  addMessage(question,"user");input.value="";sendButton.disabled=true;
-  const thinking=addMessage("Checking today's sessions…","bot");
-  try{
-    const response=await fetch(SESSIONS_URL,{cache:"no-store"});
-    if(!response.ok)throw new Error("Could not fetch the live sessions CSV (HTTP "+response.status+").");
-    const csv=await response.text(),rows=parseCSV(csv);
-    const fetchedAt=new Date().toLocaleString("en-IE",{timeZone:"Europe/Dublin"});
-    const answer=localAnswer(rows,question)||await askBrain(question,csv);
-    thinking.remove();addMessage(answer,"bot","Live session data fetched at "+fetchedAt);
-  }catch(error){thinking.remove();addMessage("Sorry, I couldn't complete that request: "+error.message,"bot");}
-  finally{sendButton.disabled=false;input.focus();}
+
+async function submitQuestion(question) {
+  if (!question.trim()) return;
+  addMessage(question, "user");
+  input.value = "";
+  sendButton.disabled = true;
+  const thinking = addMessage("Checking live Dockside information…", "bot");
+
+  try {
+    const response = await fetch(SESSIONS_URL, { cache: "no-store" });
+    if (!response.ok) throw new Error("Could not fetch the live sessions CSV (HTTP " + response.status + ").");
+    const csv = await response.text();
+    const rows = parseCSV(csv);
+
+    let answer;
+    let meta;
+    if (isWeatherQuestion(question)) {
+      const current = await getLiveWeather();
+      answer = weatherAnswer(current, question);
+      meta = "Live weather from Open-Meteo · Grand Canal Dock";
+    } else {
+      answer = localAnswer(rows, question) || await askBrain(question, csv);
+      const fetchedAt = new Date().toLocaleString("en-IE", { timeZone: "Europe/Dublin" });
+      meta = "Live session data fetched at " + fetchedAt;
+    }
+
+    thinking.remove();
+    addMessage(answer, "bot", meta);
+  } catch (error) {
+    thinking.remove();
+    addMessage(
+      "Sorry, I couldn't verify that information from the live source: " + error.message +
+      (isWeatherQuestion(question) ? " I won't guess current weather or safety conditions." : ""),
+      "bot"
+    );
+  } finally {
+    sendButton.disabled = false;
+    input.focus();
+  }
 }
-form.addEventListener("submit",event=>{event.preventDefault();submitQuestion(input.value);});
-document.querySelectorAll(".prompt").forEach(btn=>btn.addEventListener("click",()=>submitQuestion(btn.textContent)));
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  submitQuestion(input.value);
+});
+document.querySelectorAll(".prompt").forEach(btn =>
+  btn.addEventListener("click", () => submitQuestion(btn.textContent))
+);
 </script>
 </body>
 </html>
