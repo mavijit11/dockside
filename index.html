@@ -3,65 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#12343b">
+<meta name="theme-color" content="#063b4a">
 <title>Ask Dockside | Dockside Paddle Co.</title>
 <style>
-:root{--navy:#12343b;--teal:#087e75;--pale:#edf6f3;--ink:#183b3a;--muted:#71858a;--line:#e3ece9}
+:root{
+  --deep:#063b4a;--ocean:#087e8b;--aqua:#63d5c6;--foam:#f3fbf8;
+  --coral:#ff806b;--sun:#ffd36e;--ink:#123943;--muted:#648087;
+  --line:#dcece8;--white:#fff;--shadow:0 18px 55px rgba(5,52,64,.13)
+}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:var(--pale);color:var(--ink);font-family:Inter,Arial,sans-serif}
-header{background:var(--navy);color:#fff;padding:25px max(22px,calc((100% - 900px)/2))}
-.brand{font-size:12px;letter-spacing:2px;font-weight:700;color:#a8d8ce}
-header h1{margin:12px 0 6px;font-size:30px}
-header p{margin:0;color:#d0e2df;font-size:14px}
-main{max-width:900px;margin:34px auto;padding:0 18px}
-.panel{background:#fff;border-radius:18px;box-shadow:0 10px 35px #12343b12;overflow:hidden}
-.intro{padding:25px 28px 14px}
-.intro h2{margin:0 0 8px;font-size:21px}
-.intro p{margin:0;color:var(--muted);line-height:1.55}
-#chat{padding:20px 28px;min-height:280px;max-height:520px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
-.message{max-width:88%;padding:14px 17px;border-radius:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}
-.bot{align-self:flex-start;background:#edf5f3}
-.user{align-self:flex-end;background:var(--navy);color:white}
-.meta{display:block;margin-top:9px;font-size:11px;color:var(--muted)}
-.composer{border-top:1px solid var(--line);padding:18px 22px;display:flex;gap:10px}
-input{flex:1;min-width:0;border:1px solid #d5e2df;border-radius:10px;padding:14px;font-size:14px;outline-color:var(--teal)}
-button{border:0;border-radius:10px;padding:0 23px;background:var(--teal);color:white;font-weight:700;cursor:pointer}
-button:disabled{opacity:.55;cursor:wait}
-.hint{padding:0 28px 22px;color:var(--muted);font-size:12px}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
-@media(max-width:540px){header{padding:22px}.intro{padding:22px 20px 12px}#chat{padding:18px 20px}.composer{padding:14px}button{padding:0 16px}.message{max-width:95%}}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--foam);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input{font:inherit}
+.topbar{height:72px;padding:0 max(22px,calc((100% - 1120px)/2));display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid #e7f0ed}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.7px;color:var(--deep)}
+.brand-mark{width:38px;height:38px;border-radius:13px;background:var(--deep);display:grid;place-items:center;color:#fff}
+.brand-mark svg{width:25px;height:25px}
+.brand small{display:block;font-size:9px;letter-spacing:2px;color:var(--ocean);font-weight:800;margin-top:2px}
+.nav-note{font-size:12px;font-weight:750;color:var(--muted)}
+.hero{position:relative;overflow:hidden;background:linear-gradient(118deg,#063b4a 0%,#087e8b 57%,#20a9a5 100%);color:#fff}
+.hero-inner{max-width:1120px;margin:auto;padding:56px 24px 62px;display:grid;grid-template-columns:1.02fr .98fr;align-items:center;gap:24px;min-height:390px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #ffffff45;border-radius:999px;background:#ffffff12;color:#c7fff1;font-size:11px;font-weight:850;letter-spacing:1.2px;text-transform:uppercase}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 4px #ffd36e25}
+h1{font-size:clamp(38px,5vw,62px);line-height:1.02;letter-spacing:-2.4px;margin:19px 0 14px;max-width:570px}
+.hero-copy{max-width:490px;color:#d7f3ee;font-size:16px;line-height:1.65;margin:0}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.hero-btn{display:inline-flex;align-items:center;gap:9px;border-radius:999px;padding:12px 18px;font-size:13px;font-weight:850;text-decoration:none}
+.hero-btn.primary{background:var(--sun);color:#3e3a24}
+.hero-btn.secondary{border:1px solid #ffffff60;color:#fff;background:#ffffff10}
+.hero-art{width:100%;max-width:510px;justify-self:end;filter:drop-shadow(0 22px 30px #002d3a50)}
+.wave-divider{height:40px;background:var(--foam);clip-path:ellipse(58% 50% at 50% 100%);margin-top:-1px}
+main{max-width:1120px;margin:-2px auto 0;padding:0 24px 56px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:24px 0 17px}
+.section-head h2{font-size:23px;letter-spacing:-.6px;margin:0 0 5px;color:var(--deep)}
+.section-head p{margin:0;color:var(--muted);font-size:13px}
+.live-pill{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;background:#e0f6ee;color:#16745f;font-size:11px;font-weight:850;white-space:nowrap}
+.live-pill i{width:7px;height:7px;border-radius:50%;background:#25b887}
+.activity-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:28px}
+.activity-card{min-height:128px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:0 5px 18px #073b4810}
+.activity-icon{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:22px;margin-bottom:12px}
+.activity-card:nth-child(1) .activity-icon{background:#e1f8f2}
+.activity-card:nth-child(2) .activity-icon{background:#fff0e9}
+.activity-card:nth-child(3) .activity-icon{background:#e9f2ff}
+.activity-card:nth-child(4) .activity-icon{background:#fff6d9}
+.activity-card strong{display:block;color:var(--deep);font-size:13px}
+.activity-card span{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.chat-layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:16px;align-items:start}
+.chat-panel{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+.chat-head{display:flex;align-items:center;gap:12px;padding:19px 22px;border-bottom:1px solid var(--line)}
+.bot-avatar{width:43px;height:43px;border-radius:15px;background:linear-gradient(135deg,var(--ocean),var(--aqua));display:grid;place-items:center;font-size:23px}
+.chat-head strong{display:block;color:var(--deep);font-size:14px}
+.chat-head small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.online{margin-left:auto;font-size:10px;font-weight:850;color:#16846b;background:#e7f8f1;padding:7px 10px;border-radius:999px}
+#chat{padding:22px;min-height:280px;max-height:440px;overflow-y:auto;display:flex;flex-direction:column;gap:13px;background:linear-gradient(#fff,#fbfefd)}
+.message{max-width:88%;padding:13px 16px;border-radius:17px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}
+.bot{align-self:flex-start;background:#eaf6f3;color:#17444a;border-bottom-left-radius:5px}
+.user{align-self:flex-end;background:var(--deep);color:white;border-bottom-right-radius:5px}
+.meta{display:block;margin-top:9px;font-size:10px;color:#779096}
+.composer{display:flex;gap:9px;padding:15px 17px;border-top:1px solid var(--line);background:#fff}
+#question{flex:1;min-width:0;border:1px solid #d6e7e2;border-radius:999px;padding:13px 17px;font-size:13px;outline:none;color:var(--ink);background:#fbfefd}
+#question:focus{border-color:var(--ocean);box-shadow:0 0 0 3px #087e8b18}
+#sendButton{border:0;border-radius:999px;padding:0 21px;background:var(--coral);color:#fff;font-size:12px;font-weight:900;cursor:pointer;box-shadow:0 5px 13px #ff806b40}
+#sendButton:disabled{opacity:.55;cursor:wait}
+.chat-foot{padding:0 21px 17px;color:#81969a;font-size:10px}
+.side-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:19px}
+.side-card h3{font-size:14px;color:var(--deep);margin:0 0 12px}
+.prompt-list{display:grid;gap:8px}
+.prompt{border:1px solid #e1eeea;background:#f8fcfa;border-radius:12px;padding:11px 12px;text-align:left;color:#28545a;font-size:11px;line-height:1.4;font-weight:750;cursor:pointer}
+.prompt:hover{border-color:var(--aqua);background:#effbf7}
+.side-note{margin-top:14px;padding:13px;border-radius:13px;background:#fff5e4;color:#78613c;font-size:11px;line-height:1.5}
+footer{text-align:center;padding:24px;color:#789096;font-size:11px}
+footer strong{color:var(--deep)}
+@media(max-width:800px){.hero-inner{grid-template-columns:1fr;padding-top:42px;padding-bottom:35px}.hero-art{max-width:420px;justify-self:center;margin-top:5px}.activity-grid{grid-template-columns:repeat(2,1fr)}.chat-layout{grid-template-columns:1fr}.side-card{order:-1}.prompt-list{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.topbar{height:62px}.nav-note{font-size:10px}.hero-inner{padding:34px 21px 30px}h1{font-size:43px}.hero-copy{font-size:14px}.hero-art{margin-left:-5px;width:108%}main{padding:0 14px 38px}.section-head{align-items:start;flex-direction:column;gap:10px}.activity-grid{gap:9px}.activity-card{padding:13px;min-height:118px}.chat-head{padding:15px}.message{max-width:95%}#chat{padding:16px;min-height:240px}.composer{padding:12px}.prompt-list{grid-template-columns:1fr 1fr}#sendButton{padding:0 16px}}
 </style>
 </head>
 <body>
-<header>
-  <div class="brand">DOCKSIDE PADDLE CO. · DUBLIN</div>
-  <h1>Ask Dockside</h1>
-  <p>Your friendly guide to watersports at Grand Canal Dock.</p>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M3 18c4-5 8-5 13 0s9 5 13 0M3 24c4-5 8-5 13 0s9 5 13 0" stroke="#72e0ce" stroke-width="3" stroke-linecap="round"/><path d="M16 4v10m-5-5 5 5 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div>DOCKSIDE<small>PADDLE CO. · DUBLIN</small></div>
+  </div>
+  <div class="nav-note">GRAND CANAL DOCK · DUBLIN</div>
 </header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow"><span class="pulse"></span> YOUR WATERFRONT PLAYGROUND</div>
+      <h1>Make a splash.<br>Find your flow.</h1>
+      <p class="hero-copy">Paddle, play and unwind on the water at Grand Canal Dock. Your next little adventure starts right here.</p>
+      <div class="hero-actions">
+        <a class="hero-btn primary" href="#ask">Ask us anything <span>↗</span></a>
+        <a class="hero-btn secondary" href="#experiences">Explore the fun <span>↓</span></a>
+      </div>
+    </div>
+    <svg class="hero-art" viewBox="0 0 560 360" role="img" aria-label="Illustration of people enjoying paddleboarding and kayaking on the water">
+      <defs>
+        <linearGradient id="water" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8ce8d7"/><stop offset="1" stop-color="#1aa3a6"/></linearGradient>
+        <linearGradient id="board" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd978"/><stop offset="1" stop-color="#ff946f"/></linearGradient>
+      </defs>
+      <circle cx="438" cy="65" r="39" fill="#ffd36e"/>
+      <path d="M65 103c40-34 91-38 135-12 36 22 68 18 104-2 42-23 94-16 123 15" fill="none" stroke="#ffffff35" stroke-width="3" stroke-linecap="round"/>
+      <path d="M32 226c64-36 126-37 188-7 65 32 124 29 185-4 45-24 82-24 126-3v111H32z" fill="url(#water)"/>
+      <path d="M34 260c61-25 111-24 164 0 60 27 114 24 174-3 47-21 91-20 158 7" fill="none" stroke="#d4fff4" stroke-width="5" stroke-linecap="round"/>
+      <path d="M48 296c57-18 102-16 153 6 54 23 105 20 159-3 55-24 99-21 170 4" fill="none" stroke="#eafff9" stroke-width="4" stroke-linecap="round"/>
+      <!-- paddleboarder -->
+      <path d="M112 233c43-13 99-13 143 0-22 13-98 17-143 0z" fill="url(#board)" stroke="#fff3d1" stroke-width="2"/>
+      <circle cx="180" cy="132" r="15" fill="#b96f4d"/>
+      <path d="M166 149q15-10 29 1l15 42-37 9-19-29z" fill="#ff806b"/>
+      <path d="M177 197l-20 28m25-26 20 28" stroke="#f6c6a7" stroke-width="9" stroke-linecap="round"/>
+      <path d="M206 111l-34 123" stroke="#ffe5a2" stroke-width="5" stroke-linecap="round"/>
+      <path d="M171 154l-23 25m25-26 21 19" stroke="#f6c6a7" stroke-width="8" stroke-linecap="round"/>
+      <!-- kayak -->
+      <path d="M312 267q66-26 139 0-69 30-139 0z" fill="#ff806b" stroke="#ffd2a6" stroke-width="2"/>
+      <circle cx="389" cy="171" r="13" fill="#9e624b"/>
+      <path d="M377 186q13-9 26 0l12 43-38 6-10-28z" fill="#ffe0a0"/>
+      <path d="M378 228l-16 35m31-34 20 34" stroke="#f2c4a4" stroke-width="8" stroke-linecap="round"/>
+      <path d="M341 161l93 88" stroke="#fff2d0" stroke-width="5" stroke-linecap="round"/>
+      <path d="M331 151l19 19m77 72 20 18" stroke="#fff2d0" stroke-width="9" stroke-linecap="round"/>
+      <path d="M76 187q17-13 34 0m335-56q18-13 35 0" fill="none" stroke="#d9fff5" stroke-width="4" stroke-linecap="round"/>
+      <path d="M255 77l7-13 7 13 13 7-13 7-7 13-7-13-13-7z" fill="#fff1b9"/>
+      <path d="M487 181l5-9 5 9 9 5-9 5-5 9-5-9-9-5z" fill="#fff1b9"/>
+    </svg>
+  </div>
+</section>
+<div class="wave-divider"></div>
+
 <main>
-  <section class="panel">
-    <div class="intro">
-      <h2>How can we help you today?</h2>
-      <p>Ask about activities, prices and availability. Answers are checked against the latest session data.</p>
+  <section id="experiences">
+    <div class="section-head">
+      <div><h2>Good times on the water</h2><p>Find your kind of waterfront adventure.</p></div>
+      <span class="live-pill"><i></i> Live session information</span>
     </div>
-    <div id="chat" aria-live="polite">
-      <div class="message bot">Hello! Welcome to Dockside Paddle Co. 👋
-Ask me about today's activities, prices or available places. I'll check the latest session information for you.</div>
+    <div class="activity-grid">
+      <article class="activity-card"><div class="activity-icon">🛶</div><strong>Kayaking</strong><span>Get out and explore</span></article>
+      <article class="activity-card"><div class="activity-icon">🏄</div><strong>Paddleboarding</strong><span>Find your balance</span></article>
+      <article class="activity-card"><div class="activity-icon">🏊</div><strong>Open-water swimming</strong><span>Make a refreshing splash</span></article>
+      <article class="activity-card"><div class="activity-icon">🧖</div><strong>Floating sauna</strong><span>Slow down and unwind</span></article>
     </div>
-    <form class="composer" id="chatForm">
-      <input id="question" type="text" placeholder="Ask about today's sessions..." aria-label="Your question" required>
-      <button id="sendButton" type="submit">Send</button>
-    </form>
-    <div class="hint">Session information is fetched live each time you ask a question.</div>
+  </section>
+
+  <section id="ask">
+    <div class="section-head">
+      <div><h2>Meet your Dockside guide</h2><p>Curious about today's sessions? Just ask.</p></div>
+    </div>
+    <div class="chat-layout">
+      <section class="chat-panel" aria-label="Ask Dockside chat">
+        <div class="chat-head">
+          <div class="bot-avatar">🌊</div>
+          <div><strong>Ask Dockside</strong><small>Your friendly waterfront sidekick</small></div>
+          <span class="online">● ONLINE</span>
+        </div>
+        <div id="chat" aria-live="polite">
+          <div class="message bot">Hey there! 👋 Welcome to Dockside Paddle Co.
+
+Looking for a paddle, a swim or a little sauna time? Ask me about today's activities, prices and places left. I'll check the latest session data for you.</div>
+        </div>
+        <form class="composer" id="chatForm">
+          <input id="question" type="text" placeholder="Ask about today's sessions..." aria-label="Your question" required>
+          <button id="sendButton" type="submit">Send ↗</button>
+        </form>
+        <div class="chat-foot">Live session data is checked each time you ask. Availability can change.</div>
+      </section>
+      <aside class="side-card">
+        <h3>Not sure what to ask?</h3>
+        <div class="prompt-list">
+          <button class="prompt" type="button">What activities are available today?</button>
+          <button class="prompt" type="button">How much does the Floating Sauna cost?</button>
+          <button class="prompt" type="button">Which activities are sold out?</button>
+          <button class="prompt" type="button">What would you recommend for a beginner?</button>
+        </div>
+        <div class="side-note">✨ Tip: Ask about a specific activity to check its price and remaining places.</div>
+      </aside>
+    </div>
   </section>
 </main>
-<footer>Dockside Paddle Co. · Grand Canal Dock, Dublin · 2026</footer>
+<footer><strong>DOCKSIDE PADDLE CO.</strong> · Grand Canal Dock, Dublin · Make a splash, find your flow.</footer>
+
 <script>
 "use strict";
-
 const SESSIONS_URL = "https://bdaib-hub.pages.dev/data/dockside/sessions.csv";
 const BRAIN_URL = "https://luas-class.kluxy.app/chat";
-
 const SYSTEM = `You are Ask Dockside, the customer service assistant for Dockside Paddle Co.
 Use only the CSV data included in the latest user message.
 Never invent activity names, prices, discounts, times, capacity or availability.
@@ -75,7 +198,7 @@ Be concise, friendly, and do not claim a booking was made.`;
 const chat = document.getElementById("chat");
 const form = document.getElementById("chatForm");
 const input = document.getElementById("question");
-const button = document.getElementById("sendButton");
+const sendButton = document.getElementById("sendButton");
 
 function addMessage(text, type, meta) {
   const bubble = document.createElement("div");
@@ -91,160 +214,100 @@ function addMessage(text, type, meta) {
   chat.scrollTop = chat.scrollHeight;
   return bubble;
 }
-
 function parseCSV(text) {
-  const rows = [];
-  let row = [], field = "", quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i], next = text[i + 1];
-    if (c === '"' && quoted && next === '"') { field += '"'; i++; }
-    else if (c === '"') quoted = !quoted;
-    else if (c === "," && !quoted) { row.push(field); field = ""; }
-    else if ((c === "\n" || c === "\r") && !quoted) {
-      if (c === "\r" && next === "\n") i++;
-      row.push(field); field = "";
-      if (row.some(v => v.trim() !== "")) rows.push(row);
-      row = [];
-    } else field += c;
+  const rows = []; let row = [], field = "", quoted = false;
+  for (let i=0;i<text.length;i++) {
+    const c=text[i], next=text[i+1];
+    if(c==='"'&&quoted&&next==='"'){field+='"';i++;}
+    else if(c==='"') quoted=!quoted;
+    else if(c===","&&!quoted){row.push(field);field="";}
+    else if((c==="\n"||c==="\r")&&!quoted){if(c==="\r"&&next==="\n")i++;row.push(field);field="";if(row.some(v=>v.trim()!==""))rows.push(row);row=[];}
+    else field+=c;
   }
-  row.push(field);
-  if (row.some(v => v.trim() !== "")) rows.push(row);
-  if (rows.length < 2) throw new Error("The sessions CSV is empty or could not be read.");
-  const headers = rows[0].map(h => h.trim().replace(/^\uFEFF/, "").toLowerCase());
-  return rows.slice(1).map(values => {
-    const item = {};
-    headers.forEach((h, i) => item[h] = (values[i] ?? "").trim());
-    return item;
-  });
+  row.push(field);if(row.some(v=>v.trim()!==""))rows.push(row);
+  if(rows.length<2)throw new Error("The sessions CSV is empty or could not be read.");
+  const headers=rows[0].map(h=>h.trim().replace(/^\uFEFF/,"").toLowerCase());
+  return rows.slice(1).map(values=>{const item={};headers.forEach((h,i)=>item[h]=(values[i]??"").trim());return item;});
 }
+function valueOf(row,names){for(const name of names){const key=Object.keys(row).find(k=>k.toLowerCase()===name);if(key&&row[key]!=="")return row[key];}return "";}
+function activityName(row){return valueOf(row,["session","activity","session_name","name","activity_name"]);}
+function priceValue(row){return valueOf(row,["price_eur","price","cost_eur","cost"]);}
+function slotsValue(row){return valueOf(row,["slots_left","available_slots","remaining_slots","slots_remaining"]);}
+function euro(value){const n=Number(String(value).replace(/[€,\s]/g,""));return Number.isFinite(n)?"€"+n.toFixed(2).replace(/\.00$/,""):"€"+value;}
+function findActivity(rows,question){
+  const q=question.toLowerCase();
+  return rows.find(r=>{const name=activityName(r);return name&&(q.includes(name.toLowerCase())||name.toLowerCase().includes(q));});
+}
+function availabilityText(row){
+  const s=slotsValue(row),name=activityName(row);
+  if(s.toLowerCase()==="auto"||s==="")return `Availability for ${name} is not specified in today's data.`;
+  const n=Number(s);
+  if(Number.isFinite(n))return n===0?`${name} is sold out (0 places remaining).`:`${name} has ${n} places remaining.`;
+  return `Availability for ${name} is not specified in today's data.`;
+}
+function localAnswer(rows,question){
+  const q=question.toLowerCase();
+  const named=findActivity(rows,question);
+  const asksPrice=/\b(price|cost|how much|€|euro|free)\b/.test(q);
+  const asksAvailability=/\b(available|availability|slots|places|sold out|capacity|remaining)\b/.test(q);
+  const asksList=/\b(activities|sessions|what can|what are|list|today)\b/.test(q);
 
-function valueOf(row, names) {
-  for (const name of names) {
-    const key = Object.keys(row).find(k => k.toLowerCase() === name);
-    if (key && row[key] !== "") return row[key];
+  // Handle combined questions first so neither requested field is dropped.
+  if(named&&asksPrice&&asksAvailability){
+    const p=priceValue(named);
+    const priceLine=p?`${activityName(named)} costs ${euro(p)} today.`:`The price for ${activityName(named)} is not specified in today's data.`;
+    return `${priceLine}\n${availabilityText(named)}`;
   }
-  return "";
-}
-function activityName(row) {
-  return valueOf(row, ["session", "activity", "session_name", "name", "activity_name"]);
-}
-function priceValue(row) {
-  return valueOf(row, ["price_eur", "price", "cost_eur", "cost"]);
-}
-function slotsValue(row) {
-  return valueOf(row, ["slots_left", "available_slots", "remaining_slots", "slots_remaining"]);
-}
-function notesValue(row) {
-  return valueOf(row, ["notes", "note", "description"]);
-}
-function euro(value) {
-  const n = Number(String(value).replace(/[€,\s]/g, ""));
-  return Number.isFinite(n) ? "€" + n.toFixed(2).replace(/\.00$/, "") : "€" + value;
-}
-function findActivity(rows, question) {
-  const q = question.toLowerCase();
-  return rows.find(r => {
-    const name = activityName(r);
-    return name && (q.includes(name.toLowerCase()) || name.toLowerCase().includes(q));
-  });
-}
-function localAnswer(rows, question) {
-  const q = question.toLowerCase();
-  const named = findActivity(rows, question);
-  const asksPrice = /\b(price|cost|how much|€|euro|free)\b/.test(q);
-  const asksAvailability = /\b(available|availability|slots|places|sold out|capacity|remaining)\b/.test(q);
-  const asksList = /\b(activities|sessions|what can|what are|list|today)\b/.test(q);
+  if(named&&asksPrice){
+    const p=priceValue(named);
+    return p?`${activityName(named)} costs ${euro(p)} today, according to the live session data.`:`${activityName(named)}: the price is not specified in today's session data.`;
+  }
+  if(named&&asksAvailability)return availabilityText(named);
 
-  if (named && asksPrice) {
-    const p = priceValue(named);
-    if (!p) return `${activityName(named)}: the price is not specified in today's session data.`;
-    const numeric = Number(String(p).replace(/[€,\s]/g, ""));
-    return `${activityName(named)} costs ${euro(p)} today, according to the live session data.`;
+  if(asksList&&asksPrice){
+    return rows.map(r=>{const n=activityName(r),p=priceValue(r);return n?`${n}: ${p?euro(p):"price not specified"}`:"";}).filter(Boolean).join("\n");
   }
-  if (named && asksAvailability) {
-    const s = slotsValue(named);
-    if (s.toLowerCase() === "auto" || s === "") return `The remaining availability for ${activityName(named)} is not specified in today's data.`;
-    const n = Number(s);
-    if (Number.isFinite(n)) return n === 0
-      ? `${activityName(named)} is sold out (0 places remaining).`
-      : `${activityName(named)} has ${n} places remaining.`;
-  }
-  if (asksList && asksPrice) {
-    return rows.map(r => {
-      const n = activityName(r), p = priceValue(r);
-      return n ? `${n}: ${p ? euro(p) : "price not specified"}` : "";
-    }).filter(Boolean).join("\n");
-  }
-  if (asksAvailability) {
-    const numeric = rows.filter(r => slotsValue(r) !== "" && slotsValue(r).toLowerCase() !== "auto" && Number.isFinite(Number(slotsValue(r))));
-    const sold = numeric.filter(r => Number(slotsValue(r)) === 0);
-    const unknown = rows.filter(r => slotsValue(r).toLowerCase() === "auto" || slotsValue(r) === "");
-    const parts = [];
-    if (numeric.length) parts.push("Availability explicitly recorded in the data:\n" + numeric.map(r => `${activityName(r)}: ${slotsValue(r)} places left`).join("\n"));
-    if (sold.length) parts.push("Sold out:\n" + sold.map(r => activityName(r)).join("\n"));
-    if (unknown.length) parts.push("Remaining availability is not specified (marked auto or blank) for:\n" + unknown.map(r => activityName(r)).join("\n"));
-    return parts.join("\n\n") || "The session data does not specify remaining availability.";
+  if(asksAvailability){
+    const numeric=rows.filter(r=>slotsValue(r)!==""&&slotsValue(r).toLowerCase()!=="auto"&&Number.isFinite(Number(slotsValue(r))));
+    const sold=numeric.filter(r=>Number(slotsValue(r))===0);
+    const unknown=rows.filter(r=>slotsValue(r).toLowerCase()==="auto"||slotsValue(r)==="");
+    const parts=[];
+    if(numeric.length)parts.push("Availability explicitly recorded in the data:\n"+numeric.map(r=>`${activityName(r)}: ${slotsValue(r)} places left`).join("\n"));
+    if(sold.length)parts.push("Sold out:\n"+sold.map(r=>activityName(r)).join("\n"));
+    if(unknown.length)parts.push("Remaining availability is not specified (marked auto or blank) for:\n"+unknown.map(r=>activityName(r)).join("\n"));
+    return parts.join("\n\n")||"The session data does not specify remaining availability.";
   }
   return null;
 }
-
-function extractReply(data) {
-  if (typeof data === "string") return data;
-  if (!data || typeof data !== "object") return "";
-  for (const key of ["reply", "response", "answer", "message", "content", "output"]) {
-    if (typeof data[key] === "string") return data[key];
-  }
-  if (data.choices?.[0]?.message?.content) return data.choices[0].message.content;
-  if (data.result && typeof data.result === "string") return data.result;
-  return "";
+function extractReply(data){
+  if(typeof data==="string")return data;if(!data||typeof data!=="object")return "";
+  for(const key of ["reply","response","answer","message","content","output"])if(typeof data[key]==="string")return data[key];
+  if(data.choices?.[0]?.message?.content)return data.choices[0].message.content;
+  if(data.result&&typeof data.result==="string")return data.result;return "";
 }
-
-async function askBrain(question, csv) {
-  const response = await fetch(BRAIN_URL, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      system: SYSTEM,
-      messages: [{role: "user", content: "LIVE SESSION CSV:\n" + csv + "\n\nCustomer question: " + question}]
-    })
-  });
-  if (!response.ok) throw new Error("AI service returned HTTP " + response.status + ".");
-  const data = await response.json();
-  const reply = extractReply(data);
-  if (!reply) throw new Error("The AI service returned an unexpected response format.");
+async function askBrain(question,csv){
+  const response=await fetch(BRAIN_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({system:SYSTEM,messages:[{role:"user",content:"LIVE SESSION CSV:\n"+csv+"\n\nCustomer question: "+question}]})});
+  if(!response.ok)throw new Error("AI service returned HTTP "+response.status+".");
+  const data=await response.json(),reply=extractReply(data);
+  if(!reply)throw new Error("The AI service returned an unexpected response format.");
   return reply;
 }
-
-form.addEventListener("submit", async event => {
-  event.preventDefault();
-  const question = input.value.trim();
-  if (!question) return;
-  addMessage(question, "user");
-  input.value = "";
-  button.disabled = true;
-  const thinking = addMessage("Checking the latest session data…", "bot");
-
-  try {
-    const response = await fetch(SESSIONS_URL, {cache: "no-store"});
-    if (!response.ok) throw new Error("Could not fetch the live sessions CSV (HTTP " + response.status + ").");
-    const csv = await response.text();
-    const rows = parseCSV(csv);
-    const fetchedAt = new Date().toLocaleString("en-IE", {timeZone:"Europe/Dublin"});
-    const deterministic = localAnswer(rows, question);
-
-    // Prices and availability are answered directly from the CSV to prevent invented facts.
-    // Other questions are sent to the class AI service with the same live CSV context.
-    const answer = deterministic || await askBrain(question, csv);
-    thinking.remove();
-    addMessage(answer, "bot", "Live session data fetched at " + fetchedAt);
-  } catch (error) {
-    thinking.remove();
-    addMessage("Sorry, I couldn't complete that request: " + error.message, "bot");
-  } finally {
-    button.disabled = false;
-    input.focus();
-  }
-});
+async function submitQuestion(question){
+  if(!question.trim())return;
+  addMessage(question,"user");input.value="";sendButton.disabled=true;
+  const thinking=addMessage("Checking today's sessions…","bot");
+  try{
+    const response=await fetch(SESSIONS_URL,{cache:"no-store"});
+    if(!response.ok)throw new Error("Could not fetch the live sessions CSV (HTTP "+response.status+").");
+    const csv=await response.text(),rows=parseCSV(csv);
+    const fetchedAt=new Date().toLocaleString("en-IE",{timeZone:"Europe/Dublin"});
+    const answer=localAnswer(rows,question)||await askBrain(question,csv);
+    thinking.remove();addMessage(answer,"bot","Live session data fetched at "+fetchedAt);
+  }catch(error){thinking.remove();addMessage("Sorry, I couldn't complete that request: "+error.message,"bot");}
+  finally{sendButton.disabled=false;input.focus();}
+}
+form.addEventListener("submit",event=>{event.preventDefault();submitQuestion(input.value);});
+document.querySelectorAll(".prompt").forEach(btn=>btn.addEventListener("click",()=>submitQuestion(btn.textContent)));
 </script>
 </body>
 </html>
