@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#063b4a">
+<meta name="theme-color" content="#071d2a">
+<meta name="description" content="Discover kayaking, paddleboarding, open-water swimming and floating sauna experiences at Grand Canal Dock, Dublin.">
 <title>Ask Dockside | Dockside Paddle Co.</title>
 <style>
 :root{
@@ -76,6 +77,83 @@ footer{text-align:center;padding:24px;color:#789096;font-size:11px}
 footer strong{color:var(--deep)}
 @media(max-width:800px){.hero-inner{grid-template-columns:1fr;padding-top:42px;padding-bottom:35px}.hero-art{max-width:420px;justify-self:center;margin-top:5px}.activity-grid{grid-template-columns:repeat(2,1fr)}.chat-layout{grid-template-columns:1fr}.side-card{order:-1}.prompt-list{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.topbar{height:62px}.nav-note{font-size:10px}.hero-inner{padding:34px 21px 30px}h1{font-size:43px}.hero-copy{font-size:14px}.hero-art{margin-left:-5px;width:108%}main{padding:0 14px 38px}.section-head{align-items:start;flex-direction:column;gap:10px}.activity-grid{gap:9px}.activity-card{padding:13px;min-height:118px}.chat-head{padding:15px}.message{max-width:95%}#chat{padding:16px;min-height:240px}.composer{padding:12px}.prompt-list{grid-template-columns:1fr 1fr}#sendButton{padding:0 16px}}
+
+/* Premium photographic direction */
+:root{--deep:#071d2a;--ocean:#0c5260;--aqua:#8edbd0;--foam:#f7f7f3;--ink:#142d35;--muted:#718187;--line:#e4e9e6;--coral:#d69a72;--sun:#e9c77d;--shadow:0 22px 65px rgba(5,28,38,.12)}
+body{background:#f7f7f3;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.topbar{height:78px;background:#fbfbf8;border-bottom:1px solid #e8e8e1}
+.brand{letter-spacing:2px;font-size:13px}.brand-mark{background:#0a2633;border-radius:50%;width:40px;height:40px}
+.brand small{letter-spacing:2.5px;color:#9a7656}
+.nav-note{letter-spacing:2px;font-size:10px}
+.hero{background:#061925;min-height:600px;position:relative}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,19,29,.88) 0%,rgba(4,26,37,.68) 43%,rgba(4,26,37,.10) 100%),linear-gradient(0deg,rgba(3,18,26,.45),transparent 45%);z-index:1}
+.hero-inner{position:relative;z-index:2;max-width:1240px;min-height:600px;padding:95px 32px 90px;display:flex;align-items:center}
+.hero-inner>div:first-child{max-width:610px}
+.hero-photo{position:absolute;inset:0 0 0 36%;background-image:url("https://images.unsplash.com/photo-1635997504434-b997d9f47c48?auto=format&fit=crop&w=2200&q=88");background-position:center 48%;background-size:cover;opacity:.96}
+.photo-caption{position:absolute;right:32px;bottom:26px;display:flex;gap:18px;color:#fff;font-size:9px;letter-spacing:2px;font-weight:800;text-shadow:0 2px 12px #000}
+.eyebrow{border:0;border-radius:0;padding:0;background:transparent;color:#e8c88b;font-size:10px;letter-spacing:3px}
+.pulse{background:#e8c88b;box-shadow:0 0 0 4px #e8c88b25}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(54px,7vw,88px);line-height:.98;letter-spacing:-2.7px;max-width:660px;margin:25px 0 20px}
+.hero-copy{font-size:16px;line-height:1.8;color:#e1e9e8;max-width:440px}
+.hero-btn{border-radius:2px;padding:15px 22px;text-transform:uppercase;letter-spacing:1.4px;font-size:10px}
+.hero-btn.primary{background:#e8c88b;color:#102631}
+.hero-btn.secondary{background:transparent;border:1px solid #ffffff80}
+.wave-divider{display:none}
+main{max-width:1240px;padding:45px 32px 72px}
+.section-head{margin:12px 0 22px}
+.section-head h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:34px;letter-spacing:-.7px;color:#102b37}
+.section-head p{font-size:13px;color:#748287}
+.live-pill{border-radius:2px;background:#e9f2ee;color:#376d5d;letter-spacing:.5px}
+.activity-grid{grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:58px}
+.activity-card.photo-card{padding:0;min-height:0;border:0;border-radius:3px;overflow:hidden;background:#fff;box-shadow:0 8px 28px #0a29300d}
+.activity-photo{height:164px;background-size:cover;background-position:center;transition:transform .5s}
+.photo-card:hover .activity-photo{transform:scale(1.04)}
+.kayak-card .activity-photo{background-image:url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Sunset_kayak_%28Unsplash%29.jpg/1280px-Sunset_kayak_%28Unsplash%29.jpg")}
+.paddle-card .activity-photo{background-image:url("https://images.unsplash.com/photo-1635997504434-b997d9f47c48?auto=format&fit=crop&w=800&q=82")}
+.swim-card .activity-photo{background-image:url("https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=800&q=82")}
+.sauna-card .activity-photo{background-image:url("https://images.unsplash.com/photo-1777499974818-d7b8ed7a7be0?auto=format&fit=crop&w=800&q=82")}
+.activity-card-copy{padding:17px 18px 19px}
+.activity-card strong{font-family:Georgia,"Times New Roman",serif;font-size:18px;font-weight:400;color:#102b37}
+.activity-card span{font-size:11px;color:#7b898b;margin-top:6px}
+.chat-layout{grid-template-columns:minmax(0,1fr) 300px;gap:20px}
+.chat-panel,.side-card{border-radius:4px;border:1px solid #e5e9e5;box-shadow:0 14px 40px #102b370c}
+.chat-head{padding:21px 24px}
+.bot-avatar{border-radius:50%;background:#0d4b58}
+.online{border-radius:2px}
+#chat{background:#fbfcfa}
+.bot{background:#edf4f0;border-radius:3px}
+.user{background:#0b3542;border-radius:3px}
+#question{border-radius:3px;background:#fff}
+#sendButton{border-radius:2px;background:#b77e59;text-transform:uppercase;letter-spacing:1px}
+.side-card{padding:22px}
+.side-card h3{font-family:Georgia,"Times New Roman",serif;font-size:21px;font-weight:400}
+.prompt{border-radius:3px;background:#fbfcfa;font-size:11px}
+.side-note{border-radius:3px}
+footer{background:#0a2633;color:#b8c5c3;padding:30px}
+footer strong{color:#e8c88b;letter-spacing:2px}
+@media(max-width:800px){
+ .hero,.hero-inner{min-height:570px}
+ .hero-inner{padding:72px 24px 80px}
+ .hero-photo{left:0;background-position:60% center}
+ .hero:before{background:linear-gradient(90deg,rgba(3,19,29,.86),rgba(4,26,37,.42)),linear-gradient(0deg,rgba(3,18,26,.55),transparent 70%)}
+ .activity-grid{grid-template-columns:repeat(2,1fr)}
+ .activity-photo{height:145px}
+}
+@media(max-width:520px){
+ .topbar{height:66px}
+ .hero,.hero-inner{min-height:550px}
+ .hero-inner{padding:62px 21px}
+ h1{font-size:56px}
+ .hero-copy{font-size:14px}
+ .photo-caption{right:16px;bottom:18px;font-size:8px;gap:9px}
+ main{padding:32px 15px 45px}
+ .section-head h2{font-size:29px}
+ .activity-grid{gap:10px}
+ .activity-photo{height:125px}
+ .activity-card-copy{padding:13px}
+ .activity-card strong{font-size:16px}
+}
+
 </style>
 </head>
 <body>
@@ -98,34 +176,9 @@ footer strong{color:var(--deep)}
         <a class="hero-btn secondary" href="#experiences">Explore the fun <span>↓</span></a>
       </div>
     </div>
-    <svg class="hero-art" viewBox="0 0 560 360" role="img" aria-label="Illustration of people enjoying paddleboarding and kayaking on the water">
-      <defs>
-        <linearGradient id="water" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8ce8d7"/><stop offset="1" stop-color="#1aa3a6"/></linearGradient>
-        <linearGradient id="board" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd978"/><stop offset="1" stop-color="#ff946f"/></linearGradient>
-      </defs>
-      <circle cx="438" cy="65" r="39" fill="#ffd36e"/>
-      <path d="M65 103c40-34 91-38 135-12 36 22 68 18 104-2 42-23 94-16 123 15" fill="none" stroke="#ffffff35" stroke-width="3" stroke-linecap="round"/>
-      <path d="M32 226c64-36 126-37 188-7 65 32 124 29 185-4 45-24 82-24 126-3v111H32z" fill="url(#water)"/>
-      <path d="M34 260c61-25 111-24 164 0 60 27 114 24 174-3 47-21 91-20 158 7" fill="none" stroke="#d4fff4" stroke-width="5" stroke-linecap="round"/>
-      <path d="M48 296c57-18 102-16 153 6 54 23 105 20 159-3 55-24 99-21 170 4" fill="none" stroke="#eafff9" stroke-width="4" stroke-linecap="round"/>
-      <!-- paddleboarder -->
-      <path d="M112 233c43-13 99-13 143 0-22 13-98 17-143 0z" fill="url(#board)" stroke="#fff3d1" stroke-width="2"/>
-      <circle cx="180" cy="132" r="15" fill="#b96f4d"/>
-      <path d="M166 149q15-10 29 1l15 42-37 9-19-29z" fill="#ff806b"/>
-      <path d="M177 197l-20 28m25-26 20 28" stroke="#f6c6a7" stroke-width="9" stroke-linecap="round"/>
-      <path d="M206 111l-34 123" stroke="#ffe5a2" stroke-width="5" stroke-linecap="round"/>
-      <path d="M171 154l-23 25m25-26 21 19" stroke="#f6c6a7" stroke-width="8" stroke-linecap="round"/>
-      <!-- kayak -->
-      <path d="M312 267q66-26 139 0-69 30-139 0z" fill="#ff806b" stroke="#ffd2a6" stroke-width="2"/>
-      <circle cx="389" cy="171" r="13" fill="#9e624b"/>
-      <path d="M377 186q13-9 26 0l12 43-38 6-10-28z" fill="#ffe0a0"/>
-      <path d="M378 228l-16 35m31-34 20 34" stroke="#f2c4a4" stroke-width="8" stroke-linecap="round"/>
-      <path d="M341 161l93 88" stroke="#fff2d0" stroke-width="5" stroke-linecap="round"/>
-      <path d="M331 151l19 19m77 72 20 18" stroke="#fff2d0" stroke-width="9" stroke-linecap="round"/>
-      <path d="M76 187q17-13 34 0m335-56q18-13 35 0" fill="none" stroke="#d9fff5" stroke-width="4" stroke-linecap="round"/>
-      <path d="M255 77l7-13 7 13 13 7-13 7-7 13-7-13-13-7z" fill="#fff1b9"/>
-      <path d="M487 181l5-9 5 9 9 5-9 5-5 9-5-9-9-5z" fill="#fff1b9"/>
-    </svg>
+    <div class="hero-photo" role="img" aria-label="Paddleboarder enjoying calm water at golden hour">
+      <div class="photo-caption"><span>GRAND CANAL DOCK</span><span>YOUR NEXT ADVENTURE STARTS HERE</span></div>
+    </div>
   </div>
 </section>
 <div class="wave-divider"></div>
@@ -137,10 +190,10 @@ footer strong{color:var(--deep)}
       <span class="live-pill"><i></i> Live session information</span>
     </div>
     <div class="activity-grid">
-      <article class="activity-card"><div class="activity-icon">🛶</div><strong>Kayaking</strong><span>Get out and explore</span></article>
-      <article class="activity-card"><div class="activity-icon">🏄</div><strong>Paddleboarding</strong><span>Find your balance</span></article>
-      <article class="activity-card"><div class="activity-icon">🏊</div><strong>Open-water swimming</strong><span>Make a refreshing splash</span></article>
-      <article class="activity-card"><div class="activity-icon">🧖</div><strong>Floating sauna</strong><span>Slow down and unwind</span></article>
+      <article class="activity-card photo-card kayak-card"><div class="activity-photo" aria-hidden="true"></div><div class="activity-card-copy"><strong>Kayaking</strong><span>Get out and explore</span></div></article>
+      <article class="activity-card photo-card paddle-card"><div class="activity-photo" aria-hidden="true"></div><div class="activity-card-copy"><strong>Paddleboarding</strong><span>Find your balance</span></div></article>
+      <article class="activity-card photo-card swim-card"><div class="activity-photo" aria-hidden="true"></div><div class="activity-card-copy"><strong>Open-water swimming</strong><span>Make a refreshing splash</span></div></article>
+      <article class="activity-card photo-card sauna-card"><div class="activity-photo" aria-hidden="true"></div><div class="activity-card-copy"><strong>Floating sauna</strong><span>Slow down and unwind</span></div></article>
     </div>
   </section>
 
@@ -179,7 +232,7 @@ Looking for a paddle, a swim or a little sauna time? Ask me about today's activi
     </div>
   </section>
 </main>
-<footer><strong>DOCKSIDE PADDLE CO.</strong> · Grand Canal Dock, Dublin · Make a splash, find your flow.</footer>
+<footer><strong>DOCKSIDE PADDLE CO.</strong> · Grand Canal Dock, Dublin · Make a splash, find your flow. <span style="display:block;margin-top:8px;font-size:9px;opacity:.7">Kayak photo: Patrick Fore / Wikimedia Commons (CC0) · Other photos: Unsplash contributors · <a href="https://unsplash.com/license" style="color:inherit">Unsplash License</a></span></footer>
 
 <script>
 "use strict";
